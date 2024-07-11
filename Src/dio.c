@@ -33,7 +33,7 @@ struct dio_t * dio_init(uint32_t address, uint32_t pin, enum dio_direction_t dir
     return self;
 }
 
-void dio_write(struct dio_t * self, uint8_t value)
+inline void dio_write(struct dio_t * self, uint8_t value)
 {
     switch(value)
     {
@@ -50,12 +50,12 @@ void dio_write(struct dio_t * self, uint8_t value)
     }
 }
 
-void dio_toggle(struct dio_t * self)
+inline void dio_toggle(struct dio_t * self)
 {
     LL_GPIO_TogglePin(self->gpiox, self->pin);
 }
 
-uint8_t dio_read(struct dio_t * self)
+inline uint8_t dio_read(struct dio_t * self)
 {
     return LL_GPIO_IsInputPinSet(self->gpiox, self->pin);
 }

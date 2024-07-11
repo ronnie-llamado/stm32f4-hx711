@@ -39,27 +39,27 @@ struct hx711_t * hx711_init(struct dio_t * data, struct dio_t * clock, struct ti
 int32_t hx711_read_count(struct hx711_t * self)
 {
     int32_t data = 0;
+    uint8_t j = 0;
 
-    for (uint8_t i = 0; i < 24; i++)
+    while(j <= 50)
     {
-        data <<= 1;
-
-        dio_write(self->clock, DIO_VALUE_ON);
-        timer_delay(self->timer, 1);
-
-        if (dio_read(self->data) == 1UL)
+        if (timer_is_update_set(self->timer))
         {
-            data++;
+            timer_clear_update(self->timer);
+
+            dio_write(self->clock, j % 2);
+
+            uint8_t temp = dio_read(self->data);
+
+            if (((j & 1) == 1) && (j <= 48))
+            {
+                data <<= 1;
+                data += temp;
+            }
+
+            j++;
         }
-
-        timer_delay(self->timer, 1);
-        dio_write(self->clock, DIO_VALUE_OFF);
-        timer_delay(self->timer, 2);
     }
-
-    dio_write(self->clock, DIO_VALUE_ON);
-    timer_delay(self->timer, 2);
-    dio_write(self->clock, DIO_VALUE_OFF);
 
     // Sign extend
     if (data & (1 << 23UL))

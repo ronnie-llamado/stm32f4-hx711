@@ -52,12 +52,13 @@ void tare(void);
 void setup(void)
 {
   us_timer = timer_init(US_TIMER);
-  timer_set_prescaler(us_timer, 84);
+  timer_set_prescaler(us_timer, 0);
+  timer_set_period(us_timer, 84);
   timer_enable(us_timer);
 
   ms_timer = timer_init(MS_TIMER);
   timer_set_prescaler(ms_timer, 84000);
-  timer_set_period(ms_timer, 1000UL);
+  timer_set_period(ms_timer, 1000);
   timer_enable(ms_timer);
 
   led_dio = dio_init(LED_PORT, LED_PIN, DIO_DIRECTION_OUTPUT);
